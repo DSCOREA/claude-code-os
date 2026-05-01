@@ -1,0 +1,32 @@
+# Build artifacts (large, regenerable)
+*.iso
+*.tar.gz
+*.squashfs
+*.apkovl.tar.gz
+cco-root.tar.gz
+cco-rootfs/
+alpine-extract/
+alpine-mount/
+initrd-extract/
+iso-extract/
+iso-mount/
+modloop-extract/
+rootfs/
+apkovl/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
+
+# Secrets (defensive — should never appear, but just in case)
+.env
+.env.*
+*.pem
+*.key
+id_rsa*
+*credentials*
+*token*
