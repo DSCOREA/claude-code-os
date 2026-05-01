@@ -4,6 +4,10 @@ A bootable LiveCD where **Claude Code is the OS**.
 
 Boot from this ISO, and instead of dropping you at a shell, the system logs you in as root, brings up the network, and immediately drops you into `claude`. The terminal is your desktop. The AI is your shell. There is nothing else.
 
+![boot demo](demo/boot.gif)
+
+> ▶ Full-quality boot recording: [demo/boot.mp4](demo/boot.mp4) · Single frame: [demo/screenshot.png](demo/screenshot.png)
+
 ## What it does
 
 ```
