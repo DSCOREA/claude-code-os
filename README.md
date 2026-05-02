@@ -67,34 +67,28 @@ Claude Code 화면이 뜨고, OAuth 코드 입력하면 끝.
 
 디스플레이 서버 없음. 윈도우 매니저 없음. 파일 매니저 없음. OS 가 곧 한 프로그램입니다.
 
-### 빌드 방법
+### ISO 다운로드 + 사용
 
-Linux 또는 WSL 환경에서:
+빌드된 `cco-alpine-vX.Y.Z.iso` 를 [Releases](https://github.com/Hostingglobal-Tech/claude-code-os/releases) 에서 다운로드 후:
 
-```bash
-# 1. Alpine 표준 ISO 다운로드
-wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-standard-3.20.3-x86_64.iso
-
-# 2. minirootfs 다운로드
-wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-minirootfs-3.20.3-x86_64.tar.gz \
-  -O alpine-minirootfs.tar.gz
-
-# 3. 빌드 (sudo 비밀번호 한 번 묻습니다)
-sudo ./build-rootfs.sh    # apk add + npm install + chroot 설정 → cco-root.tar.gz
-sudo ./build-iso.sh       # initramfs patch + ISO 재패키징 → cco-livecd.iso
-
-# 4. 부팅
-qemu-system-x86_64 -m 2048 -cdrom cco-livecd.iso -boot d
+**VMware 에서 실행**
 ```
-
-### VMware 에서 실행
-
-```
-- 2 vCPU / 2 GB RAM 이상
-- 네트워크 어댑터: e1000 또는 vmxnet3 (둘 다 OK — 자동 probe)
+- 2 vCPU / 4 GB RAM 이상 권장
+- 네트워크 어댑터: e1000 또는 vmxnet3
 - 부팅 순서: CD/DVD 우선
-- cco-livecd.iso 마운트 후 전원 ON
-- 약 15초 후 배너 + claude 프롬프트
+- ISO 마운트 후 전원 ON
+- 약 30~60초 후 데스크톱 + claude 프롬프트
+```
+
+**물리 PC 에 USB 로 굽기** (Windows)
+```powershell
+# Rufus 또는 Etcher 사용 (DD 모드)
+# 또는 PowerShell 의 dd 명령
+```
+
+**물리 PC 에 USB 로 굽기** (Linux/macOS)
+```bash
+sudo dd if=cco-alpine-vX.Y.Z.iso of=/dev/sdX bs=4M status=progress oflag=sync
 ```
 
 ### 기본 로그인 (v1.0.6)
@@ -176,25 +170,22 @@ Two design choices worth calling out:
 
 2. **No apkovl auto-detect.** Alpine's standard apkovl mechanism wants to find the overlay via syslinux APPEND args, and that path was unreliable across QEMU/VMware/bare-metal. We bypass it by patching `/init` to find the tar at any of `/media/cdrom`, `/media/sr0`, `/.modloop`, `/sysroot/media/cdrom`, with a `find /` fallback.
 
-### Build
+### Download + run
 
-You need a Linux build host (or WSL) with `bash`, `sudo`, `tar`, `cpio`, `gzip`, `xorriso`, and ~2 GB free disk:
+Grab `cco-alpine-vX.Y.Z.iso` from the [Releases](https://github.com/Hostingglobal-Tech/claude-code-os/releases) page.
 
+**VMware**
+- 2 vCPU / 4 GB RAM (recommended)
+- Network adapter: e1000 or vmxnet3
+- Boot order: CD/DVD first
+- ~30–60s after power-on, you'll see the desktop + claude prompt.
+
+**USB on bare metal** (Linux/macOS)
 ```bash
-wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-standard-3.20.3-x86_64.iso
-wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-minirootfs-3.20.3-x86_64.tar.gz \
-  -O alpine-minirootfs.tar.gz
-sudo ./build-rootfs.sh
-sudo ./build-iso.sh
-qemu-system-x86_64 -m 2048 -cdrom cco-livecd.iso -boot d
+sudo dd if=cco-alpine-vX.Y.Z.iso of=/dev/sdX bs=4M status=progress oflag=sync
 ```
 
-### Run on VMware
-
-- 2 vCPU / 2 GB RAM minimum
-- Network adapter: e1000 or vmxnet3 (auto-probed)
-- Boot order: CD/DVD first
-- After ~15 seconds you see the banner + claude prompt
+Windows: use Rufus or balenaEtcher in DD mode.
 
 ### Default credentials (v1.0.6)
 
