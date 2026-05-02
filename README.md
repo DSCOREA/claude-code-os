@@ -67,9 +67,23 @@ Claude Code 화면이 뜨고, OAuth 코드 입력하면 끝.
 
 디스플레이 서버 없음. 윈도우 매니저 없음. 파일 매니저 없음. OS 가 곧 한 프로그램입니다.
 
-### ISO 다운로드 + 사용
+### 다운로드
 
-빌드된 `cco-alpine-vX.Y.Z.iso` 를 [Releases](https://github.com/Hostingglobal-Tech/claude-code-os/releases) 에서 다운로드 후:
+[Releases](https://github.com/Hostingglobal-Tech/claude-code-os/releases) 에서 `cco-alpine-vX.Y.Z.iso` 받기.
+
+### 직접 빌드
+
+```bash
+# 1. Alpine 표준 ISO + minirootfs 다운로드
+wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-standard-3.20.3-x86_64.iso
+wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-minirootfs-3.20.3-x86_64.tar.gz
+
+# 2. 빌드 (sudo 필요)
+sudo ./build-rootfs.sh   # apk + npm + chroot 셋업 → cco-root.tar
+sudo ./build-iso.sh      # initramfs patch + ISO 재패키징 → cco-alpine-v1.0.6.iso
+```
+
+### 실행
 
 **VMware 에서 실행**
 ```
@@ -170,9 +184,20 @@ Two design choices worth calling out:
 
 2. **No apkovl auto-detect.** Alpine's standard apkovl mechanism wants to find the overlay via syslinux APPEND args, and that path was unreliable across QEMU/VMware/bare-metal. We bypass it by patching `/init` to find the tar at any of `/media/cdrom`, `/media/sr0`, `/.modloop`, `/sysroot/media/cdrom`, with a `find /` fallback.
 
-### Download + run
+### Download
 
 Grab `cco-alpine-vX.Y.Z.iso` from the [Releases](https://github.com/Hostingglobal-Tech/claude-code-os/releases) page.
+
+### Build it yourself
+
+```bash
+wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-standard-3.20.3-x86_64.iso
+wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-minirootfs-3.20.3-x86_64.tar.gz
+sudo ./build-rootfs.sh   # apk + npm + chroot setup → cco-root.tar
+sudo ./build-iso.sh      # initramfs patch + ISO repack → cco-alpine-v1.0.6.iso
+```
+
+### Run
 
 **VMware**
 - 2 vCPU / 4 GB RAM (recommended)
