@@ -2,11 +2,13 @@
 
 **Claude Code 가 OS 자체** 인 부팅 가능한 LiveCD ISO 입니다.
 
-이 ISO 로 부팅하면 데스크톱도, 브라우저도, 메뉴바도 없습니다. 자동 로그인 → 네트워크 자동 연결 → 화면에 바로 `claude` 가 뜹니다. 터미널이 데스크톱이고, AI 가 셸입니다. 그 외엔 아무것도 없습니다.
+USB 한 개 꽂고 부팅하면 — 자동 로그인 → 데스크톱 → 한글 입력 가능한 터미널 → claude 자동 시작 → OAuth URL 자동으로 Firefox 새 탭에 뜸. 사장님은 인증만 하면 끝.
 
-![boot demo](demo/boot.gif)
+![v1.0.6 한글 입력](demo/v1.0.6-korean-input.jpg)
 
-> ▶ 풀화질 부팅 영상: [demo/boot.mp4](demo/boot.mp4) · 단일 프레임: [demo/screenshot.png](demo/screenshot.png)
+> 위 화면: v1.0.6 부팅 후 한글 입력 + claude 응답. xfce4-terminal + D2Coding 폰트 + ibus-hangul.
+
+> 📋 [전체 변경 이력 (v1.0.0 → v1.0.6)](CHANGELOG.md) · [Initial console boot](demo/boot.gif) · [부팅 영상 mp4](demo/boot.mp4)
 
 **Languages**: [한국어](#한국어) · [English](#english)
 
@@ -95,14 +97,32 @@ qemu-system-x86_64 -m 2048 -cdrom cco-livecd.iso -boot d
 - 약 15초 후 배너 + claude 프롬프트
 ```
 
-### 기본 로그인
+### 기본 로그인 (v1.0.6)
 
 ```
-user: root
+user: cco         (자동 로그인, sudo NOPASSWD)
 pass: cco
+root pass: cco    (응급 시만)
 ```
 
-이 비밀번호는 demo 용이라 일부러 약합니다. 신뢰할 수 없는 네트워크에 SSH 를 열 거라면 부팅 후 `passwd` 로 변경하고, `rm /etc/ssh/ssh_host_*; ssh-keygen -A` 로 호스트 키를 새로 만드세요.
+`cco` 사용자가 데스크톱 + claude 모두 실행. `root` 직접 사용 X (claude 의 `--dangerously-skip-permissions` 가 root 거부).
+
+데모 비번이라 약합니다. 신뢰할 수 없는 네트워크에 SSH 를 열 거라면 부팅 후 `sudo passwd cco` 로 변경하고, `sudo rm /etc/ssh/ssh_host_*; sudo ssh-keygen -A` 로 호스트 키를 새로 만드세요.
+
+### 단축키 (v1.0.6)
+
+| 키 | 동작 |
+|---|---|
+| `F2` | Firefox |
+| `F3` | 새 터미널 |
+| `F4` | 새 Claude |
+| `F11` | Fullscreen |
+| `Alt+Mouse1` | 창 이동 |
+| `Alt+Mouse3` | 창 크기 조정 |
+| `Alt+Tab` | 창 전환 |
+| `Ctrl+Shift+V` | 터미널 붙여넣기 |
+| 한영 | 한글/영문 토글 |
+| 우클릭 (바탕화면) | 메뉴 |
 
 ### 이건 이런 게 아닙니다
 
@@ -176,14 +196,32 @@ qemu-system-x86_64 -m 2048 -cdrom cco-livecd.iso -boot d
 - Boot order: CD/DVD first
 - After ~15 seconds you see the banner + claude prompt
 
-### Default credentials
+### Default credentials (v1.0.6)
 
 ```
-user: root
+user: cco         (autologin, sudo NOPASSWD)
 pass: cco
+root pass: cco    (emergency only)
 ```
 
-Demo password — change it (`passwd`) and regenerate SSH host keys (`rm /etc/ssh/ssh_host_*; ssh-keygen -A`) before exposing on an untrusted network.
+`cco` runs the desktop and claude. `root` is not used directly — claude's `--dangerously-skip-permissions` rejects root.
+
+Demo password — change it (`sudo passwd cco`) and regenerate SSH host keys (`sudo rm /etc/ssh/ssh_host_*; sudo ssh-keygen -A`) before exposing on an untrusted network.
+
+### Keyboard shortcuts (v1.0.6)
+
+| Key | Action |
+|---|---|
+| `F2` | Firefox |
+| `F3` | New terminal |
+| `F4` | New Claude |
+| `F11` | Fullscreen |
+| `Alt+Mouse1` | Move window |
+| `Alt+Mouse3` | Resize window |
+| `Alt+Tab` | Switch window |
+| `Ctrl+Shift+V` | Paste in terminal |
+| Hangul key | Korean/English toggle |
+| Right-click on desktop | Menu |
 
 ### What it is not
 
