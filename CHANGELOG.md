@@ -4,6 +4,36 @@
 
 ---
 
+## v1.0.7 (2026-05-04) — 무선/유선 드라이버 + 일반 PC/노트북 호환
+
+ASUS X515 같은 일반 노트북에서도 USB 부팅 → Wi-Fi 자동 인식 → 인터넷 OK.
+
+### 추가
+- **Wi-Fi 펌웨어** — Intel iwlwifi · Realtek rtlwifi/rtw88/rtw89 · Atheros ath9k/ath10k/ath11k · Broadcom · MediaTek MT7921/7922 · 기타. 시중 노트북 약 90% Wi-Fi 칩 자동 인식.
+- **유선 NIC 펌웨어** — Realtek rtl_nic · Broadcom bnx2/bnx2x · Tigon · cxgb3/cxgb4. 데스크톱/노트북 LAN 칩 광범위 커버.
+- **NetworkManager** — Wi-Fi 자동 관리 + GUI/TUI 설정. fluxbox 트레이에 `nm-applet` 자동 시작 (배터리/Wi-Fi 신호 아이콘).
+- **`nm-connection-editor`** — Wi-Fi SSID + 비번 GUI 설정.
+- **`nmtui`** — 텍스트 모드 Wi-Fi 설정 (xterm 안에서 가능).
+- **wpa_supplicant + iw + wireless-tools** — CLI 백업.
+- **NIC 모듈 광범위 probe** — `iwlwifi/iwlmvm/iwldvm/rtl8821ce/rtl8821ae/rtl8723be/rtl8188ee/rtw88_pci/rtw89_pci/ath10k_pci/ath11k_pci/ath9k/brcmfmac/mt7921e/mt7922e/r8169/r8168/igb/ixgbe/atl1c/atl1e` 등 부팅 시 자동 modprobe.
+- **부팅 menu 이름** — `Linux lts` → **Claude Code OS** 로 변경 (BIOS 부팅 시 표시되는 첫 화면).
+- **fluxbox 트레이 활성** — Wi-Fi 아이콘 + 시계 + iconbar.
+- **fluxbox 메뉴 Wi-Fi 항목** — 우클릭 → "Wi-Fi 설정" / "Wi-Fi 텍스트 모드".
+
+### 변경
+- **chromium 제거** — Firefox 만 사용 (사장님 OAuth 흐름이 Firefox 단일이라 chromium 불필요). ISO 약 200MB 절약.
+
+### 사용법 (노트북에 USB 부팅 시)
+1. USB 부팅 → **Claude Code OS** 메뉴 선택
+2. cco 자동 로그인 → 데스크톱
+3. 트레이 우측 하단 Wi-Fi 아이콘 클릭 → SSID 선택 → 비번 입력
+4. claude 자동 시작 → OAuth → 끝
+
+### ISO 정보
+- 크기: 1.72 GB (v1.0.6 1.79GB 보다 70MB 작음)
+- 패키지: 410
+
+---
 ## v1.0.6 (2026-05-02) — 데스크톱 워크스테이션
 
 ![v1.0.6 한글 입력](demo/v1.0.6-korean-input.jpg)
@@ -90,3 +120,4 @@
 | 클립보드 | host 와 분리 | VMware 통합 (open-vm-tools) |
 | 단축키 | 없음 | F2/F3/F4/F11 |
 | ISO 크기 | ~400MB | ~1.9GB |
+

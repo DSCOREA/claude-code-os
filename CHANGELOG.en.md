@@ -4,6 +4,36 @@
 
 ---
 
+## v1.0.7 (2026-05-04) — Wi-Fi/Ethernet drivers + general PC/laptop support
+
+USB-boot from any normal laptop (e.g. ASUS X515) → Wi-Fi auto-detected → online.
+
+### Added
+- **Wi-Fi firmware** — Intel iwlwifi · Realtek rtlwifi/rtw88/rtw89 · Atheros ath9k/ath10k/ath11k · Broadcom · MediaTek MT7921/7922 · others. Covers ~90% of laptop Wi-Fi chipsets shipping today.
+- **Ethernet NIC firmware** — Realtek rtl_nic · Broadcom bnx2/bnx2x · Tigon · cxgb3/cxgb4. Broad coverage for desktop/laptop LAN chips.
+- **NetworkManager** — manages Wi-Fi automatically + GUI/TUI configuration. `nm-applet` auto-starts in fluxbox tray (battery + Wi-Fi signal icon).
+- **`nm-connection-editor`** — GUI for SSID + password setup.
+- **`nmtui`** — text-mode Wi-Fi setup (run inside terminal).
+- **wpa_supplicant + iw + wireless-tools** — CLI fallback.
+- **Aggressive NIC module probe** — auto-modprobes `iwlwifi/iwlmvm/iwldvm/rtl8821ce/rtl8821ae/rtl8723be/rtl8188ee/rtw88_pci/rtw89_pci/ath10k_pci/ath11k_pci/ath9k/brcmfmac/mt7921e/mt7922e/r8169/r8168/igb/ixgbe/atl1c/atl1e` on boot.
+- **Boot menu label** — `Linux lts` → **Claude Code OS** (the first screen shown in BIOS boot).
+- **Fluxbox tray enabled** — Wi-Fi icon + clock + iconbar.
+- **Fluxbox menu Wi-Fi entries** — right-click → "Wi-Fi 설정" / "Wi-Fi 텍스트 모드".
+
+### Changed
+- **chromium removed** — Firefox-only (the OAuth flow uses Firefox alone, chromium became dead weight). Saves ~200MB.
+
+### Usage on a bare-metal laptop
+1. USB boot → select **Claude Code OS** menu entry.
+2. cco autologin → desktop.
+3. Click the Wi-Fi icon (bottom-right tray) → pick SSID → enter password.
+4. claude starts automatically → OAuth → done.
+
+### ISO info
+- Size: 1.72 GB (70 MB smaller than v1.0.6's 1.79 GB)
+- Packages: 410
+
+---
 ## v1.0.6 (2026-05-02) — Desktop workstation
 
 ![v1.0.6 Korean input](demo/v1.0.6-korean-input.jpg)
@@ -90,3 +120,4 @@ X11 desktop + Korean IME + Firefox + zero-typing OAuth, all on first boot.
 | Clipboard | isolated from host | VMware integrated (open-vm-tools) |
 | Shortcuts | none | F2/F3/F4/F11 |
 | ISO size | ~400MB | ~1.9GB |
+
