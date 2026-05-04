@@ -4,120 +4,86 @@
 
 ---
 
-## v1.0.7 (2026-05-04) — Wi-Fi/Ethernet drivers + general PC/laptop support
-
-USB-boot from any normal laptop (e.g. ASUS X515) → Wi-Fi auto-detected → online.
+## v1.0.34 (2026-05-05) — All expected fixes + Ventoy auto-boot
 
 ### Added
-- **Wi-Fi firmware** — Intel iwlwifi · Realtek rtlwifi/rtw88/rtw89 · Atheros ath9k/ath10k/ath11k · Broadcom · MediaTek MT7921/7922 · others. Covers ~90% of laptop Wi-Fi chipsets shipping today.
-- **Ethernet NIC firmware** — Realtek rtl_nic · Broadcom bnx2/bnx2x · Tigon · cxgb3/cxgb4. Broad coverage for desktop/laptop LAN chips.
-- **NetworkManager** — manages Wi-Fi automatically + GUI/TUI configuration. `nm-applet` auto-starts in fluxbox tray (battery + Wi-Fi signal icon).
-- **`nm-connection-editor`** — GUI for SSID + password setup.
-- **`nmtui`** — text-mode Wi-Fi setup (run inside terminal).
-- **wpa_supplicant + iw + wireless-tools** — CLI fallback.
-- **Aggressive NIC module probe** — auto-modprobes `iwlwifi/iwlmvm/iwldvm/rtl8821ce/rtl8821ae/rtl8723be/rtl8188ee/rtw88_pci/rtw89_pci/ath10k_pci/ath11k_pci/ath9k/brcmfmac/mt7921e/mt7922e/r8169/r8168/igb/ixgbe/atl1c/atl1e` on boot.
-- **Boot menu label** — `Linux lts` → **Claude Code OS** (the first screen shown in BIOS boot).
-- **Fluxbox tray enabled** — Wi-Fi icon + clock + iconbar.
-- **Fluxbox menu Wi-Fi entries** — right-click → "Wi-Fi 설정" / "Wi-Fi 텍스트 모드".
-
-### Changed
-- **chromium removed** — Firefox-only (the OAuth flow uses Firefox alone, chromium became dead weight). Saves ~200MB.
-
-### Usage on a bare-metal laptop
-1. USB boot → select **Claude Code OS** menu entry.
-2. cco autologin → desktop.
-3. Click the Wi-Fi icon (bottom-right tray) → pick SSID → enter password.
-4. claude starts automatically → OAuth → done.
-
-### ISO info
-- Size: 1.72 GB (70 MB smaller than v1.0.6's 1.79 GB)
-- Packages: 410
-
----
-## v1.0.6 (2026-05-02) — Desktop workstation
-
-![v1.0.6 Korean input](demo/v1.0.6-korean-input.jpg)
-
-X11 desktop + Korean IME + Firefox + zero-typing OAuth, all on first boot.
-
-### Added
-- **X11 GUI environment** — Xorg + fluxbox (lightweight WM). Desktop instead of black console after boot.
-- **Korean input** — `ibus-hangul` + Noto CJK + **D2Coding** font (Naver, popular among Korean developers). Hangul/English toggle key.
-- **xfce4-terminal** — replaces `xterm`. **Ctrl+Shift+V paste**, tabs, modern UI, dark theme.
-- **Firefox ESR** — replaces `chromium`. Detects claude's OAuth URL and opens a new tab with auto-focus. **No need to close any window first.**
-- **cco user (uid 1000)** — no more root. Member of wheel/video/input/audio/tty groups. `sudo NOPASSWD`.
-- **`--dangerously-skip-permissions` automatic** — claude wrapper always starts in bypass mode. No more pressing Y every time.
-- **VMware host clipboard sync** — `open-vm-tools` + `xf86-input-vmmouse`. Copy on host → paste in VM.
-- **VMware SVGA dynamic resolution** — `xf86-video-vmware` + `xrandr`. Auto-resize with host window.
-- **Keyboard shortcuts** — F2 Firefox / F3 Terminal / F4 Claude / F11 Fullscreen / Alt+Mouse1 to move windows.
-- **`script(1)` pty wrapper** — fixes claude's `Input must be provided either through stdin or as a prompt argument` error.
-- **Auto OAuth URL detection** — wrapper monitors claude output → `https://...` URL detected → spawns Firefox new tab.
-- **Xorg setcap** — `cap_sys_rawio,cap_dac_override,cap_sys_admin+ep`. Lets normal users start X with I/O port access.
-- **xhost + .Xauthority cookie copy** — resolves X session permission conflicts.
-- **World-first marketing + demo video** — boot GIF + Korean input screenshot in README.
-
-### Changed
-- **Versioning** SemVer (v1.0.0, v1.0.1, ...). Older v1–v25 retired.
-- **Default user**: `root` → `cco`.
-- **Default browser**: `chromium --no-sandbox` → `firefox`.
-- **Default terminal**: `xterm` → `xfce4-terminal`.
-- **Autologin TTY**: tty1 root → tty1 cco → tty1 cco (sudo wheel) (final).
-- **Plain tar overlay** — `cco-root.tar.gz` (gzip) → `cco-root.tar` (no compression). busybox tar extracts 1.5GB in 30–60s (faster than gzip).
+- **chrony** — time sync (1970 → correct → SSL/OAuth works)
+- **OpenRC services** — devfs, dmesg, hwclock, bootmisc, hostname, syslog, urandom, modules, iwd, networkmanager, dbus, chronyd
+- **`/etc/fstab`** — proc, sys, devpts (gid=5,mode=620), shm, run, tmp standard mounts
+- **`/etc/hosts`** + **`/etc/hostname` = claude-code-os**
+- **modloop re-enabled** — kernel modules load correctly (Wi-Fi, USB drivers)
+- **Ventoy auto-boot** ventoy.json: `VTOY_MENU_TIMEOUT: 3`, `VTOY_DEFAULT_IMAGE`, `persistence.autosel: 1`
+- **Auto installer**: `install-cco-on-ventoy.ps1` (Windows) + `.sh` (Linux/macOS)
+- **INSTALL.md** — Korean user guide
 
 ### Fixed
-- Keyboard not working → added `eudev` + `xf86-input-vmmouse`.
-- Screen cropped → `xf86-video-vmware` (SVGA) + xterm geometry tweaks.
-- `failed to enable I/O ports 0000-03ff` → Xorg setcap + cco in video/input groups.
-- `xauth: file /home/cco/.Xauthority does not exist` → copy root's .Xauthority cookie to cco home + `xhost +SI:localuser:cco`.
-- Two chromium instances (boss had to close first window before second appeared) → firefox single-instance.
-- chromium window not focusable on click → firefox + wmctrl auto-raise.
-- Auto-entered `--print` mode → bypassed via script(1) pty preservation.
-
-### ISO info
-- Size: ~1.9GB
-- Packages: 365 (firefox + xfce4-terminal + ibus + Xorg + chromium fallback)
-- Build time: ~5 minutes
-- Boot time: ~30–60s on VMware ESXi
+- v1.0.33 PTY ("Failed to open PTY") — `/dev/pts` mount
+- v1.0.32 `/dev/tty1` — devtmpfs explicit mount
+- v1.0.31 squashfs search — find / + diagnostic
+- v1.0.30 init bypass fail — alpine init reuse + sed insert
 
 ---
 
-## v1.0.0 (2026-05-01) — First public release (console only)
+## v1.0.27~33 (2026-05-04 → 05) — squashfs+overlay validated
 
-![v1 boot](demo/boot.gif)
-
-### Added
-- Based on Alpine Linux 3.20 standard ISO.
-- initramfs `/init` patch — extracts overlay via `tar xzf /cco-root.tar.gz`.
-- Pre-installed Node.js + npm + `@anthropic-ai/claude-code` inside chroot.
-- inittab tty1 autologin (root).
-- `/etc/profile.d/cco.sh` — banner (ANSI 256-color cyan/gold), loopback up, IPv6 up, NIC probe (vmxnet3/e1000), DHCP, sshd, exec claude.
-- "Claude Code OS" ASCII banner.
-- Boot demo video + GIF + single-frame screenshot.
-- English/Korean README (Korean first).
-
-### Limitations
-- Console only (no X11).
-- Keyboard only, no GUI mouse.
-- No Korean input.
-- claude OAuth = authenticate on a separate PC browser, type the code.
-- Runs as root → `--dangerously-skip-permissions` rejected.
+- v1.0.27 — Ventoy persistence auto-detect (label `casper-rw`, FAT32 cco-persistence.dat)
+- v1.0.30 — alpine init reuse + sed insert (workdir fix)
+- v1.0.32 — devtmpfs on /sysroot
+- v1.0.33 — devpts mount
 
 ---
 
-## Comparison
+## v1.0.20~26 — Wi-Fi GUI + persistence
 
-| Item | v1.0.0 | v1.0.6 |
+- v1.0.20 — **iwgtk** (gtk3 Wi-Fi manager) + iwd backend, RTL8821CE compatible
+- v1.0.21 — USB persistence (cco-persistence init)
+- v1.0.22 — fast boot (timeouts, loglevel, fastboot)
+- v1.0.25 — plain tar fallback (validated)
+- v1.0.26 — persistence on USB FAT32 (cdrom remount fix)
+
+---
+
+## v1.0.13~19 — UI cleanup + Wi-Fi evolution
+
+- v1.0.15 — English-only menus (font fallback workaround)
+- v1.0.16 — Wi-Fi rfkill + cfg80211 + dbus + wpa_supplicant
+- v1.0.17 — RTL8821CE firmware correct package names
+- v1.0.18~19 — Wi-Fi GUI/CLI experiments
+
+---
+
+## v1.0.7~12 — Wi-Fi/Ethernet drivers
+
+- v1.0.7 — linux-firmware-* drivers (RTL/Intel/Atheros/Broadcom/MediaTek)
+- v1.0.8 — UEFI grub.cfg "Linux lts" → "Claude Code OS"
+
+---
+
+## v1.0.6 — Desktop workstation
+
+- X11 + fluxbox + xfce4-terminal + Firefox + ibus-hangul + D2Coding
+- cco user (sudo NOPASSWD), claude --dangerously-skip-permissions automatic
+- VMware open-vm-tools clipboard sync
+
+---
+
+## v1.0.0 — First public release
+
+- Alpine Linux 3.20 base + initramfs `/init` patch
+- nodejs + npm + claude-code preinstalled
+- Console-only (no X11), root autologin
+
+---
+
+## Comparison (v1.0.0 → v1.0.34)
+
+| Item | v1.0.0 | v1.0.34 |
 |---|---|---|
-| Interface | Black console | X11 desktop (fluxbox) |
+| Interface | Black console | X11 desktop |
 | User | root | cco (sudo NOPASSWD) |
-| Terminal | TTY (Linux console) | xfce4-terminal (tabs, Ctrl+Shift+V) |
-| Font | console default | D2Coding (Korean dev favorite) |
-| Korean input | none | ibus-hangul (Hangul toggle) |
-| Browser | none | Firefox ESR (auto OAuth) |
-| OAuth flow | Separate PC + code | Inside the VM (URL → new tab) |
-| `--dangerously-skip-permissions` | rejected (root) | automatic (cco) |
-| Mouse | not working | working (vmmouse) + Alt+drag to move |
-| Clipboard | isolated from host | VMware integrated (open-vm-tools) |
-| Shortcuts | none | F2/F3/F4/F11 |
-| ISO size | ~400MB | ~1.9GB |
-
+| Korean input | none | ibus-hangul + D2Coding |
+| Wi-Fi | none | iwgtk + iwd (RTL8821CE etc.) |
+| OAuth | Separate PC | Firefox automatic |
+| **Persistence** | none | **Ventoy auto (cco-persistence.dat)** |
+| Auto installer | none | **`install-cco-on-ventoy.{ps1,sh}` one-liner** |
+| ISO size | ~400 MB | ~930 MB (squashfs) |

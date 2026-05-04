@@ -78,8 +78,6 @@
 
 ## v1.0.6 (2026-05-02) — 데스크톱 워크스테이션
 
-![v1.0.6 한글](demo/v1.0.6-korean-input.jpg)
-
 - X11 + fluxbox + xfce4-terminal + Firefox + ibus-hangul + D2Coding
 - cco user (sudo NOPASSWD), claude --dangerously-skip-permissions 자동
 - VMware open-vm-tools 클립보드 sync
@@ -88,8 +86,6 @@
 ---
 
 ## v1.0.0 (2026-05-01) — 첫 공개
-
-![v1 부팅](demo/boot.gif)
 
 - Alpine Linux 3.20 standard ISO + initramfs `/init` 패치
 - nodejs + npm + claude-code 사전 설치

@@ -8,7 +8,7 @@ USB 한 개 꽂고 부팅하면 — 자동 로그인 → 데스크톱 → 한글
 
 > Hero image — Claude Code OS v1.0.34. World's first AI-native LiveCD: USB boot → Korean input → AI in 30 seconds.
 
-> 📋 [전체 변경 이력 (v1.0.0 → v1.0.34)](CHANGELOG.md) · [Initial console boot](demo/boot.gif) · [부팅 영상 mp4](demo/boot.mp4)
+> 📋 [Full changelog](CHANGELOG.md) · [Install guide](INSTALL.md)
 
 **Languages**: [한국어](#한국어) · [English](#english)
 
