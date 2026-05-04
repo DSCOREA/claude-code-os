@@ -19,10 +19,10 @@ USB 한 개로 **Wi-Fi/OAuth/설정 자동 저장 (재부팅 후에도 보존)**
 
 ## 설치 (3 단계)
 
-### 1. Ventoy 박기
+### 1. Ventoy 설치
 
-[Ventoy 다운로드](https://www.ventoy.net) → Ventoy2Disk.exe 으로 USB 설치.
-USB 의 모든 데이터 사라짐 (사용자 USB 미리 백업).
+[Ventoy 다운로드](https://www.ventoy.net) → Ventoy2Disk.exe 으로 USB 에 설치.
+USB 의 모든 데이터 사라지므로 미리 백업.
 
 ### 2. 4 파일 USB 에 복사
 
@@ -57,7 +57,7 @@ PC BIOS 부팅 메뉴 → USB 선택 → **3초 후 자동**:
 
 1. **iwgtk** 으로 Wi-Fi 연결 (트레이 또는 우클릭 메뉴)
 2. **claude** 자동 시작 → OAuth URL 자동 Firefox open → 인증
-3. 사장님 **설정**, **자주 쓰는 파일** 추가 — 모두 `/home/cco` 에 자동 저장
+3. **설정**, **자주 쓰는 파일** 추가 — 모두 `/home/cco` 에 자동 저장
 4. **재부팅** → Wi-Fi 자동 연결, claude 자동 인증 (이미 설정된 상태) — 사용자 입력 0
 
 ---

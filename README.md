@@ -2,11 +2,11 @@
 
 **Claude Code 가 OS 자체** 인 부팅 가능한 LiveCD ISO 입니다.
 
-USB 한 개 꽂고 부팅하면 — 자동 로그인 → 데스크톱 → 한글 입력 가능한 터미널 → claude 자동 시작 → OAuth URL 자동으로 Firefox 새 탭에 뜸. 인증 한 번이면 끝.
+USB 한 개 꽂고 부팅하면 — `cco` 사용자 자동 로그인 → fluxbox 데스크톱 → 한글 입력 가능한 터미널 → claude 자동 시작 → OAuth URL 자동으로 Firefox 새 탭에 뜸. 인증 한 번이면 끝.
 
 ![Claude Code OS hero](demo/cco-hero.png)
 
-> Hero image — Claude Code OS v1.0.34. World's first AI-native LiveCD: USB boot → Korean input → AI in 30 seconds.
+> Hero image — Claude Code OS v1.0.34. AI-native LiveCD: USB boot → Korean input → AI in ~30 seconds.
 
 > 📋 [Full changelog](CHANGELOG.md) · [Install guide](INSTALL.md)
 
@@ -45,27 +45,31 @@ AI 가 인터페이스 그 자체인데, 왜 그 앞에 OS 와 설치 과정을 
 ```
 BIOS POST
   ↓
-Alpine Linux 3.20 커널 + initramfs
+Alpine Linux 3.20 커널 + 패치 initramfs 로드
   ↓
-init patch: overlay tar 를 sysroot 위에 풀기
+init patch:
+    - cco-root.squashfs (zstd) 를 lower 로 마운트 (압축 해제 X — 직접 mount)
+    - tmpfs 4 GB 를 upper + workdir 로 마운트
+    - overlay 로 결합 → /sysroot
   ↓
-switch_root → Node.js + npm + claude-code 가 설치된 실 Alpine 환경
+switch_root → cco-root 환경 (Xorg + fluxbox + claude-code 포함)
   ↓
-inittab 가 tty1 에 root 자동 로그인
+inittab tty1 → cco 사용자 자동 로그인 (uid 1000, sudo NOPASSWD)
   ↓
-/etc/profile.d/cco.sh:
-    - 배너 표시 (ANSI 256-color cyan/gold)
-    - loopback (lo) 활성
-    - lo IPv6 활성 (Claude OAuth callback 이 ::1 에 bind)
-    - NIC 드라이버 probe (vmxnet3 / e1000)
-    - DHCP (udhcpc)
-    - sshd 시작
-    - exec claude
+/etc/local.d/cco-infra.start:
+    - udev / Wi-Fi 드라이버 modprobe (RTL8821CE 등)
+    - persistence 검색 (casper-rw label 또는 cco-persistence.dat)
+    - /home/cco · NetworkManager · iwd 를 persistence 에 bind-mount
+    - dbus / iwd / NetworkManager / sshd / chrony 시작
   ↓
-Claude Code 화면이 뜨고, OAuth 코드 입력하면 끝.
+/home/cco/.profile → startx → fluxbox + ibus-hangul + iwgtk + xfce4-terminal
+  ↓
+xfce4-terminal 안 cco-startup → claude
+  ↓
+OAuth URL 이 Firefox 새 탭에 자동으로 열림.
 ```
 
-디스플레이 서버 없음. 윈도우 매니저 없음. 파일 매니저 없음. OS 가 곧 한 프로그램입니다.
+squashfs 가 그대로 mount 되어 압축 해제 단계 없음. 변경분은 tmpfs 의 overlay upper 에만 박혀 디스크는 건드리지 않음 (true LiveCD).
 
 ### 자동 설치 (한 줄, 추천)
 
@@ -149,8 +153,8 @@ root pass: cco    (응급 시만)
 
 ### 이건 이런 게 아닙니다
 
-- 데일리 드라이버 OS 가 아닙니다. GUI, 패키지 매니저 UI, 설치 프로그램 없음.
-- 샌드박스가 아닙니다. `claude` 가 root 로 동작하며 네트워크 권한 풀로 가집니다. 중요한 머신에는 띄우지 마세요.
+- 데일리 드라이버 OS 가 아닙니다. 패키지 매니저 UI, 설치 프로그램, 파일 매니저 모두 없음 (fluxbox + 터미널 + Firefox 만).
+- 샌드박스가 아닙니다. `claude` 는 `cco` 사용자 (uid 1000, NOPASSWD sudo) 로 동작하므로 마음만 먹으면 시스템 전체를 변경할 수 있습니다. 중요한 머신에는 띄우지 마세요.
 - Anthropic 과 무관합니다. 빌드 시 npm 에서 공식 CLI 를 받아 설치할 뿐입니다.
 
 ### 라이선스
@@ -163,7 +167,7 @@ Alpine Linux 베이스는 자체 라이선스 (대부분 MIT/BSD/GPL — Alpine 
 
 ## English
 
-A bootable LiveCD where **Claude Code is the OS**. Boot from this ISO, and instead of dropping you at a shell, the system logs you in as root, brings up the network, and immediately drops you into `claude`. The terminal is your desktop. The AI is your shell. There is nothing else.
+A bootable LiveCD where **Claude Code is the OS**. Boot from this ISO, and instead of dropping you at a shell, the system logs you in as `cco` (sudo NOPASSWD, uid 1000), brings up Wi-Fi/network, opens a fluxbox desktop, and immediately drops you into `claude` running inside an `xfce4-terminal`. The terminal is your desktop. The AI is your shell. There is nothing else.
 
 ### Why this exists
 
@@ -258,8 +262,8 @@ Demo password — change it (`sudo passwd cco`) and regenerate SSH host keys (`s
 
 ### What it is not
 
-- Not a daily-driver OS. No GUI, no installer, no package manager UI.
-- Not a sandbox. `claude` runs as root with full network access — don't run it on a machine you care about.
+- Not a daily-driver OS. Just fluxbox + terminal + Firefox — no installer, no package manager UI, no file manager.
+- Not a sandbox. `claude` runs as the `cco` user (uid 1000) with NOPASSWD sudo, so it can change the whole system if asked. Don't run it on a machine you care about.
 - Not affiliated with Anthropic. We just install their official CLI from npm at build time.
 
 ### License
