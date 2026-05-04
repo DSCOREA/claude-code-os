@@ -104,7 +104,7 @@ wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-miniroot
 
 # 2. 빌드 (sudo)
 sudo ./build-rootfs.sh   # apk + npm + chroot + Wi-Fi/persistence 셋업 → cco-root.squashfs (~760MB, zstd)
-sudo ./build-iso.sh 1.0.34   # initramfs patch + boot menu + ISO → cco-alpine-v1.0.34.iso (~930MB)
+sudo ./build-iso.sh 1.0.35   # initramfs patch + boot menu + ISO → cco-alpine-v1.0.35.iso (~930MB)
 ```
 
 ### 실행

@@ -96,6 +96,15 @@ rc-update add modules boot 2>/dev/null || true
 mkdir -p /etc/NetworkManager/conf.d
 printf '[device]\nwifi.backend=iwd\n' > /etc/NetworkManager/conf.d/wifi-backend.conf
 
+# iwd main config — NetworkManager handles IP, iwd handles only Wi-Fi auth
+mkdir -p /etc/iwd
+cat > /etc/iwd/main.conf <<'IWD'
+[General]
+EnableNetworkConfiguration=false
+[Network]
+NameResolvingService=none
+IWD
+
 rm -rf /var/cache/apk/*
 CHROOT
 
@@ -175,11 +184,14 @@ if mountpoint -q /persistence 2>/dev/null; then
   chown -R 1000:1000 /persistence/home/cco 2>/dev/null
 fi
 
-mkdir -p /var/run/dbus
+mkdir -p /var/run/dbus /var/lib/iwd
 dbus-uuidgen --ensure 2>/dev/null
-dbus-daemon --system --fork 2>/dev/null
-iwd -B 2>/dev/null
-NetworkManager --no-daemon 2>/dev/null &
+# OpenRC services (iwd, NetworkManager, dbus, chronyd) start via rc-update,
+# this fallback only runs if the OpenRC start failed for some reason.
+pgrep -x dbus-daemon >/dev/null 2>&1 || dbus-daemon --system --fork 2>/dev/null
+sleep 1
+pgrep -x iwd >/dev/null 2>&1 || iwd -B 2>/dev/null
+pgrep -x NetworkManager >/dev/null 2>&1 || NetworkManager 2>/dev/null &
 sleep 3
 /usr/sbin/sshd 2>/dev/null
 [ -f /etc/ssh/ssh_host_ed25519_key ] || ssh-keygen -A 2>/dev/null
@@ -201,9 +213,14 @@ cat > "$ROOT/home/cco/.profile" <<'EOP'
 export LANG=C.UTF-8 LC_ALL=C.UTF-8
 export GTK_IM_MODULE=ibus QT_IM_MODULE=ibus XMODIFIERS="@im=ibus"
 export BROWSER='firefox'
+[ -f "$HOME/.Xauthority" ] || { touch "$HOME/.Xauthority"; chmod 600 "$HOME/.Xauthority"; }
 touch /tmp/cco-done
 exec startx
 EOP
+
+# Pre-create empty Xauthority so first startx doesn't spam "does not exist"
+touch "$ROOT/home/cco/.Xauthority"
+chmod 600 "$ROOT/home/cco/.Xauthority"
 echo "exec startfluxbox" > "$ROOT/home/cco/.xinitrc"
 
 cat > "$ROOT/home/cco/.fluxbox/startup" <<'EOX'

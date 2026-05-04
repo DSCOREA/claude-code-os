@@ -4,6 +4,14 @@
 
 ---
 
+## v1.0.35 (2026-05-05) — Xauthority + iwd 첫 부팅 fix
+
+### 수정
+- **`.Xauthority does not exist`** — `/home/cco/.Xauthority` 빈 파일 미리 생성 (chmod 600). `.profile` 에 `startx` 직전 fallback 추가.
+- **iwd 시작 실패** — `/etc/iwd/main.conf` 추가 (`EnableNetworkConfiguration=false` + `NameResolvingService=none` — NetworkManager 가 IP/DNS 담당). `/var/lib/iwd` 미리 생성. cco-infra.start 의 daemon spawn 을 OpenRC service 와 충돌 안 하게 `pgrep` 가드.
+
+---
+
 ## v1.0.34 (2026-05-05) — 모든 예상 issue + Ventoy 자동 부팅
 
 ### 추가
