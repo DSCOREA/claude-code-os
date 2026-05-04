@@ -6,9 +6,9 @@ USB 한 개 꽂고 부팅하면 — 자동 로그인 → 데스크톱 → 한글
 
 ![Claude Code OS hero](demo/cco-hero.png)
 
-> Hero image — Claude Code OS v1.0.16. World's first AI-native LiveCD: USB boot → Korean input → AI in 30 seconds.
+> Hero image — Claude Code OS v1.0.34. World's first AI-native LiveCD: USB boot → Korean input → AI in 30 seconds.
 
-> 📋 [전체 변경 이력 (v1.0.0 → v1.0.6)](CHANGELOG.md) · [Initial console boot](demo/boot.gif) · [부팅 영상 mp4](demo/boot.mp4)
+> 📋 [전체 변경 이력 (v1.0.0 → v1.0.34)](CHANGELOG.md) · [Initial console boot](demo/boot.gif) · [부팅 영상 mp4](demo/boot.mp4)
 
 **Languages**: [한국어](#한국어) · [English](#english)
 
@@ -93,13 +93,14 @@ curl -sL https://raw.githubusercontent.com/Hostingglobal-Tech/claude-code-os/mai
 ### 직접 빌드
 
 ```bash
-# 1. Alpine 표준 ISO + minirootfs 다운로드
+# 1. Alpine 표준 ISO + minirootfs + squashfs-tools
+sudo apt-get install squashfs-tools xorriso cpio   # Debian/Ubuntu
 wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-standard-3.20.3-x86_64.iso
 wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-minirootfs-3.20.3-x86_64.tar.gz
 
-# 2. 빌드 (sudo 필요)
-sudo ./build-rootfs.sh   # apk + npm + chroot 셋업 → cco-root.tar
-sudo ./build-iso.sh      # initramfs patch + ISO 재패키징 → cco-alpine-v1.0.6.iso
+# 2. 빌드 (sudo)
+sudo ./build-rootfs.sh   # apk + npm + chroot + Wi-Fi/persistence 셋업 → cco-root.squashfs (~760MB, zstd)
+sudo ./build-iso.sh 1.0.34   # initramfs patch + boot menu + ISO → cco-alpine-v1.0.34.iso (~930MB)
 ```
 
 ### 실행
@@ -124,7 +125,7 @@ sudo ./build-iso.sh      # initramfs patch + ISO 재패키징 → cco-alpine-v1.
 sudo dd if=cco-alpine-vX.Y.Z.iso of=/dev/sdX bs=4M status=progress oflag=sync
 ```
 
-### 기본 로그인 (v1.0.6)
+### 기본 로그인 (latest)
 
 ```
 user: cco         (자동 로그인, sudo NOPASSWD)
@@ -136,7 +137,7 @@ root pass: cco    (응급 시만)
 
 데모 비번이라 약합니다. 신뢰할 수 없는 네트워크에 SSH 를 열 거라면 부팅 후 `sudo passwd cco` 로 변경하고, `sudo rm /etc/ssh/ssh_host_*; sudo ssh-keygen -A` 로 호스트 키를 새로 만드세요.
 
-### 단축키 (v1.0.6)
+### 단축키 (latest)
 
 | 키 | 동작 |
 |---|---|
@@ -187,21 +188,23 @@ Talking to an AI shouldn't require installing an OS, then drivers, then a browse
 
 ```
 ┌──────────────────────────────────────────────┐
-│  Alpine Standard ISO 3.20.3 (upstream, vanilla)│
+│  Alpine Standard ISO 3.20.3 (upstream)        │
 │  └─ /boot/initramfs-lts (patched)             │
-│       └─ /init: extract /cco-root.tar.gz onto│
-│                 /sysroot before switch_root  │
-│  └─ /cco-root.tar.gz (we add this — the rootfs│
-│      built by chroot installing nodejs + npm  │
-│      + @anthropic-ai/claude-code globally)    │
+│       └─ /init: mount cco-root.squashfs       │
+│                 + tmpfs upper + overlayfs     │
+│                 → /sysroot (no extraction)    │
+│  └─ /cco-root.squashfs (zstd, ~760 MB)        │
+│      desktop + Wi-Fi GUI + claude + Korean    │
 └──────────────────────────────────────────────┘
 ```
 
 Two design choices worth calling out:
 
-1. **No squashfs.** Earlier iterations mounted a squashfs overlay at init time, but loop module wasn't loaded that early. busybox `tar` is always available, so the rootfs ships as a plain `.tar.gz` and we extract it directly onto `/sysroot/`. Slightly larger, but bulletproof.
+1. **squashfs + overlayfs.** rootfs is mounted directly as a read-only squashfs; a tmpfs holds writable changes via overlayfs. No extraction step — boot stays fast and the disk is untouched (true LiveCD).
 
-2. **No apkovl auto-detect.** Alpine's standard apkovl mechanism wants to find the overlay via syslinux APPEND args, and that path was unreliable across QEMU/VMware/bare-metal. We bypass it by patching `/init` to find the tar at any of `/media/cdrom`, `/media/sr0`, `/.modloop`, `/sysroot/media/cdrom`, with a `find /` fallback.
+2. **Aggressive device discovery.** The `/init` patch tries 11 mount points, then 13 block devices, then `find /` (depth 6). Works on QEMU, VMware, Ventoy, bare-metal USB.
+
+3. **Ventoy-aware persistence.** Boot-time scan finds `casper-rw` labeled partitions or a `cco-persistence.dat` file inside any FAT32/exFAT partition; bind-mounts `/home/cco`, `/etc/NetworkManager`, `/var/lib/iwd` so Wi-Fi credentials and OAuth tokens survive reboots.
 
 ### Download
 
@@ -210,10 +213,11 @@ Grab `cco-alpine-vX.Y.Z.iso` from the [Releases](https://github.com/Hostinggloba
 ### Build it yourself
 
 ```bash
+sudo apt-get install squashfs-tools xorriso cpio
 wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-standard-3.20.3-x86_64.iso
 wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-minirootfs-3.20.3-x86_64.tar.gz
-sudo ./build-rootfs.sh   # apk + npm + chroot setup → cco-root.tar
-sudo ./build-iso.sh      # initramfs patch + ISO repack → cco-alpine-v1.0.6.iso
+sudo ./build-rootfs.sh        # → cco-root.squashfs
+sudo ./build-iso.sh 1.0.34    # → cco-alpine-v1.0.34.iso
 ```
 
 ### Run
@@ -231,7 +235,7 @@ sudo dd if=cco-alpine-vX.Y.Z.iso of=/dev/sdX bs=4M status=progress oflag=sync
 
 Windows: use Rufus or balenaEtcher in DD mode.
 
-### Default credentials (v1.0.6)
+### Default credentials (latest)
 
 ```
 user: cco         (autologin, sudo NOPASSWD)
@@ -243,7 +247,7 @@ root pass: cco    (emergency only)
 
 Demo password — change it (`sudo passwd cco`) and regenerate SSH host keys (`sudo rm /etc/ssh/ssh_host_*; sudo ssh-keygen -A`) before exposing on an untrusted network.
 
-### Keyboard shortcuts (v1.0.6)
+### Keyboard shortcuts (latest)
 
 | Key | Action |
 |---|---|
