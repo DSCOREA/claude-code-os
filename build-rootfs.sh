@@ -72,8 +72,9 @@ chmod 440 /etc/sudoers.d/wheel
 # firefox symlink
 ln -sf firefox-esr /usr/bin/firefox
 
-# Xorg setcap
-setcap 'cap_sys_rawio,cap_dac_override,cap_sys_admin+ep' /usr/libexec/Xorg /usr/bin/Xorg 2>/dev/null
+# Xorg setcap (one file per call; some Alpine versions only ship one path)
+setcap 'cap_sys_rawio,cap_dac_override,cap_sys_admin+ep' /usr/bin/Xorg 2>/dev/null || true
+[ -e /usr/libexec/Xorg ] && setcap 'cap_sys_rawio,cap_dac_override,cap_sys_admin+ep' /usr/libexec/Xorg 2>/dev/null || true
 
 mkdir -p /etc/X11
 printf 'allowed_users=anybody\nneeds_root_rights=yes\n' > /etc/X11/Xwrapper.config
@@ -198,7 +199,8 @@ sleep 3
 /usr/bin/vmtoolsd -b /var/run/vmtoolsd.pid 2>/dev/null &
 
 chmod 664 /dev/dri/card0 /dev/dri/renderD128 2>/dev/null
-setcap 'cap_sys_rawio,cap_dac_override,cap_sys_admin+ep' /usr/libexec/Xorg /usr/bin/Xorg 2>/dev/null
+setcap 'cap_sys_rawio,cap_dac_override,cap_sys_admin+ep' /usr/bin/Xorg 2>/dev/null || true
+[ -e /usr/libexec/Xorg ] && setcap 'cap_sys_rawio,cap_dac_override,cap_sys_admin+ep' /usr/libexec/Xorg 2>/dev/null || true
 EOI
 chmod +x "$ROOT/etc/local.d/cco-infra.start"
 
