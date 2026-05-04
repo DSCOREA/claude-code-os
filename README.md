@@ -4,9 +4,9 @@
 
 USB 한 개 꽂고 부팅하면 — 자동 로그인 → 데스크톱 → 한글 입력 가능한 터미널 → claude 자동 시작 → OAuth URL 자동으로 Firefox 새 탭에 뜸. 사장님은 인증만 하면 끝.
 
-![v1.0.6 한글 입력](demo/v1.0.6-korean-input.jpg)
+![Claude Code OS hero](demo/cco-hero.png)
 
-> 위 화면: v1.0.6 부팅 후 한글 입력 + claude 응답. xfce4-terminal + D2Coding 폰트 + ibus-hangul.
+> Hero image — Claude Code OS v1.0.16. World's first AI-native LiveCD: USB boot → Korean input → AI in 30 seconds.
 
 > 📋 [전체 변경 이력 (v1.0.0 → v1.0.6)](CHANGELOG.md) · [Initial console boot](demo/boot.gif) · [부팅 영상 mp4](demo/boot.mp4)
 
@@ -248,3 +248,4 @@ Demo password — change it (`sudo passwd cco`) and regenerate SSH host keys (`s
 ### License
 
 MIT. See [LICENSE](LICENSE). Alpine Linux base is under its own licenses (mostly MIT/BSD/GPL). The Claude Code CLI (`@anthropic-ai/claude-code`) is licensed by Anthropic; this repo only contains build scripts that fetch it from npm.
+
