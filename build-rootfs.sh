@@ -107,7 +107,16 @@ EnableNetworkConfiguration=false
 NameResolvingService=none
 IWD
 
-rm -rf /var/cache/apk/*
+# Slim — drop man/doc/extra locale + npm/apk caches (saves ~150 MB)
+rm -rf /var/cache/apk/* \
+       /root/.npm /root/.cache /home/*/.npm /home/*/.cache \
+       /usr/share/man /usr/share/doc /usr/share/info \
+       /usr/share/help \
+       /tmp/* /var/tmp/* 2>/dev/null
+# Keep only en + ko locales
+find /usr/share/locale -mindepth 1 -maxdepth 1 -type d \
+     ! -name 'en' ! -name 'en_*' ! -name 'ko' ! -name 'ko_*' \
+     -exec rm -rf {} + 2>/dev/null
 CHROOT
 
 # 4. inittab + autologin
