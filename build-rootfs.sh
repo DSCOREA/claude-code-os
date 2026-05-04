@@ -84,6 +84,7 @@ rc-update add iwd default 2>/dev/null || true
 rc-update add networkmanager default 2>/dev/null || true
 rc-update add dbus default 2>/dev/null || true
 rc-update add chronyd default 2>/dev/null || true
+rc-update add local default 2>/dev/null || true
 rc-update add devfs sysinit 2>/dev/null || true
 rc-update add dmesg sysinit 2>/dev/null || true
 rc-update add hwclock boot 2>/dev/null || true
@@ -130,6 +131,7 @@ EOF
 echo "claude-code-os" > "$ROOT/etc/hostname"
 
 # 6. /etc/local.d/cco-infra.start — boot-time setup + persistence auto-mount
+mkdir -p "$ROOT/etc/local.d"
 cat > "$ROOT/etc/local.d/cco-infra.start" <<'EOI'
 #!/bin/sh
 /sbin/udevd --daemon 2>/dev/null
