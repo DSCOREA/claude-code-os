@@ -42,12 +42,12 @@ apk add --no-cache \
   ibus ibus-hangul ibus-gtk3 libhangul \
   font-noto-cjk font-noto-cjk-extra \
   open-vm-tools open-vm-tools-gtk open-vm-tools-guestinfo \
-  eudev shadow sudo util-linux libcap-utils \
-  musl-locales coreutils wget unzip wmctrl \
+  eudev shadow sudo util-linux util-linux-misc libcap-utils \
+  musl-locales coreutils wget unzip \
   linux-firmware-rtw88 linux-firmware-rtl_nic linux-firmware-rtl_bt \
   wpa_supplicant iw wireless-tools \
   networkmanager networkmanager-wifi networkmanager-tui \
-  network-manager-applet rfkill iwd iwgtk \
+  network-manager-applet iwd iwgtk \
   chrony
 
 # claude code
