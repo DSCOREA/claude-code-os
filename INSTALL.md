@@ -1,6 +1,6 @@
 # 설치 가이드 — Claude Code OS + Ventoy persistence
 
-USB 한 개로 **Wi-Fi/OAuth/한글룰 자동 저장 (재부팅 후에도 보존)** 환경을 만드는 방법.
+USB 한 개로 **Wi-Fi/OAuth/설정 자동 저장 (재부팅 후에도 보존)** 환경을 만드는 방법.
 
 ---
 
@@ -21,12 +21,12 @@ USB 한 개로 **Wi-Fi/OAuth/한글룰 자동 저장 (재부팅 후에도 보존
 
 ### 1. Ventoy 박기
 
-[Ventoy 다운로드](https://www.ventoy.net) → Ventoy2Disk.exe 으로 USB 박음.
-USB 의 모든 데이터 사라짐 (사장님 USB 미리 백업).
+[Ventoy 다운로드](https://www.ventoy.net) → Ventoy2Disk.exe 으로 USB 설치.
+USB 의 모든 데이터 사라짐 (사용자 USB 미리 백업).
 
 ### 2. 4 파일 USB 에 복사
 
-USB 부팅 후 **VTOYEFI / Ventoy** 라벨 partition 안에 박음:
+USB 부팅 후 **VTOYEFI / Ventoy** 라벨 partition 안에 설치:
 
 ```
 F:\
@@ -57,8 +57,8 @@ PC BIOS 부팅 메뉴 → USB 선택 → **3초 후 자동**:
 
 1. **iwgtk** 으로 Wi-Fi 연결 (트레이 또는 우클릭 메뉴)
 2. **claude** 자동 시작 → OAuth URL 자동 Firefox open → 인증
-3. 사장님 **한글룰**, **자주 쓰는 파일** 박음 — 모두 `/home/cco` 에 자동 저장
-4. **재부팅** → Wi-Fi 자동 연결, claude 자동 인증 (이미 박힌 상태) — 사장님 입력 0
+3. 사장님 **설정**, **자주 쓰는 파일** 추가 — 모두 `/home/cco` 에 자동 저장
+4. **재부팅** → Wi-Fi 자동 연결, claude 자동 인증 (이미 설정된 상태) — 사용자 입력 0
 
 ---
 
@@ -111,7 +111,7 @@ mkfs.ext4 -F -L casper-rw cco-persistence.dat
 
 - **부팅 시 "Welcome to Alpine" 떨어짐** — ISO 파일 손상. 다시 다운로드.
 - **PTY 에러 / can't open tty1** — v1.0.33 이상 사용. 옛 버전 폐기.
-- **Wi-Fi 안 잡힘** — RTL8821CE chip 의 firmware 박혀있음 (v1.0.17+). 그래도 안 되면 `dmesg | grep -i firmware` 확인.
+- **Wi-Fi 안 잡힘** — RTL8821CE chip 의 firmware 포함됨 (v1.0.17+). 그래도 안 되면 `dmesg | grep -i firmware` 확인.
 - **persistence 안 활성** — `mountpoint /persistence` 결과 확인. ventoy.json 의 image 이름이 ISO 와 정확히 일치 해야.
 
 ---

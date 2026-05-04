@@ -20,7 +20,7 @@ if [ -z "$USB_PATH" ]; then
     fi
     if [ -z "$USB_PATH" ]; then
         echo "Error: Ventoy USB 못 찾음. mount point 명시: $0 /mnt/usb"
-        echo "Ventoy 미박힘 시 https://www.ventoy.net 박은 후 다시 실행."
+        echo "Ventoy 미설치 시 https://www.ventoy.net 설치한 후 다시 실행."
         exit 1
     fi
     echo "USB 발견: $USB_PATH"

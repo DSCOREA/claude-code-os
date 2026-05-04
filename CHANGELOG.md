@@ -7,20 +7,20 @@
 ## v1.0.34 (2026-05-05) — 모든 예상 issue + Ventoy 자동 부팅
 
 ### 추가
-- **chrony** 박음 — 시간 sync (1970 → 정확 시간 → SSL/OAuth 정상)
+- **chrony** 추가 — 시간 sync (1970 → 정확 시간 → SSL/OAuth 정상)
 - **OpenRC service 활성** — devfs / dmesg / hwclock / bootmisc / hostname / syslog / urandom / modules / iwd / networkmanager / dbus / chronyd
 - **`/etc/fstab`** — proc, sys, devpts (gid=5,mode=620), shm, run, tmp 표준 mount
 - **`/etc/hosts`** + **`/etc/hostname` = claude-code-os**
-- **`nomodloop` 폐기** — alpine modloop 사용 → kernel module 정상 load (Wi-Fi/USB driver 박힘)
+- **`nomodloop` 폐기** — alpine modloop 사용 → kernel module 정상 load (Wi-Fi/USB driver 설치됨)
 - **Ventoy 자동 부팅 ventoy.json**:
   - `VTOY_MENU_TIMEOUT: 3` — 3초 후 자동
   - `VTOY_DEFAULT_IMAGE: cco-alpine-v1.0.34.iso` — 자동 선택
   - `persistence.autosel: 1` — persistence 자동 enabled
-- **자동 installer 스크립트**: `install-cco-on-ventoy.ps1` (Windows) + `.sh` (Linux/macOS) — 한 줄 명령으로 USB 박음
+- **자동 installer 스크립트**: `install-cco-on-ventoy.ps1` (Windows) + `.sh` (Linux/macOS) — 한 줄 명령으로 USB 설치
 - **INSTALL.md** — 한국어 사용자 가이드
 
 ### 수정
-- v1.0.33 의 PTY ("Failed to open PTY") — `/dev/pts` 박음
+- v1.0.33 의 PTY ("Failed to open PTY") — `/dev/pts` 설치
 - v1.0.32 의 `/dev/tty1` — `mksquashfs -e dev` 폐기 + devtmpfs mount
 - v1.0.31 의 squashfs 검색 — find / + diagnostic
 - v1.0.30 의 init bypass fail — alpine init 본체 활용 + sed insert
@@ -69,7 +69,7 @@
 
 ## v1.0.7~12 (2026-05-02 → 04) — Wi-Fi/Ethernet driver
 
-- v1.0.7 — linux-firmware-* 드라이버 박음 (RTL/Intel/Atheros/Broadcom/MediaTek)
+- v1.0.7 — linux-firmware-* 드라이버 설치 (RTL/Intel/Atheros/Broadcom/MediaTek)
 - v1.0.8 — UEFI grub.cfg "Linux lts" → "Claude Code OS"
 - v1.0.9~11 — squashfs 시도 (mount fail)
 - v1.0.12 — plain tar 회귀

@@ -3,14 +3,14 @@
   Claude Code OS — Ventoy USB 에 cco 파일 자동 설치 (Windows)
 
 .DESCRIPTION
-  Ventoy 가 박힌 USB drive 에 cco-alpine ISO + persistence + ventoy.json 자동 다운로드 + 복사.
+  Ventoy 가 설치된 USB drive 에 cco-alpine ISO + persistence + ventoy.json 자동 다운로드 + 복사.
 
 .EXAMPLE
   PS> .\install-cco-on-ventoy.ps1 -Drive F:
   PS> .\install-cco-on-ventoy.ps1                # 자동 USB 검색
 
 .NOTES
-  Ventoy 미박힘 시 https://www.ventoy.net 에서 먼저 박음.
+  Ventoy 미설치 시 https://www.ventoy.net 에서 먼저 설치.
 #>
 
 param(
@@ -25,7 +25,7 @@ if (-not $Drive) {
     $vols = Get-Volume -ErrorAction SilentlyContinue | Where-Object { $_.FileSystemLabel -eq 'VENTOY' -or $_.FileSystemLabel -eq 'Ventoy' }
     if ($vols.Count -eq 0) {
         Write-Host "Ventoy USB 못 찾음. -Drive 옵션으로 명시. 예: -Drive F:" -ForegroundColor Red
-        Write-Host "또는 Ventoy 미박힘 — https://www.ventoy.net 박은 후 다시 실행."
+        Write-Host "또는 Ventoy 미설치 — https://www.ventoy.net 설치한 후 다시 실행."
         exit 1
     }
     $Drive = "$($vols[0].DriveLetter):"

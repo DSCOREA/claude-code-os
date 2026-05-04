@@ -2,7 +2,7 @@
 
 **Claude Code 가 OS 자체** 인 부팅 가능한 LiveCD ISO 입니다.
 
-USB 한 개 꽂고 부팅하면 — 자동 로그인 → 데스크톱 → 한글 입력 가능한 터미널 → claude 자동 시작 → OAuth URL 자동으로 Firefox 새 탭에 뜸. 사장님은 인증만 하면 끝.
+USB 한 개 꽂고 부팅하면 — 자동 로그인 → 데스크톱 → 한글 입력 가능한 터미널 → claude 자동 시작 → OAuth URL 자동으로 Firefox 새 탭에 뜸. 인증 한 번이면 끝.
 
 ![Claude Code OS hero](demo/cco-hero.png)
 
@@ -36,7 +36,7 @@ AI 가 인터페이스 그 자체인데, 왜 그 앞에 OS 와 설치 과정을 
 
 5. **딴 앱으로 새지 않습니다.** 메일, 유튜브, 알림, 광고 — 산만함의 원천이 화면에 존재하지 않습니다. AI 한 가지에만 집중.
 
-6. **키오스크, 교육실, 데모 부스에 그대로 박을 수 있습니다.** 단일 목적 = 단일 화면. 사용자가 헤맬 여지 자체가 없습니다.
+6. **키오스크, 교육실, 데모 부스에 그대로 사용할 수 있습니다.** 단일 목적 = 단일 화면. 사용자가 헤맬 여지 자체가 없습니다.
 
 7. **종료하면 깨끗.** 디스크에 아무것도 남지 않습니다. 다음 사람한테 PC 넘겨도 안전.
 
@@ -49,7 +49,7 @@ Alpine Linux 3.20 커널 + initramfs
   ↓
 init patch: overlay tar 를 sysroot 위에 풀기
   ↓
-switch_root → Node.js + npm + claude-code 가 박힌 실 Alpine 환경
+switch_root → Node.js + npm + claude-code 가 설치된 실 Alpine 환경
   ↓
 inittab 가 tty1 에 root 자동 로그인
   ↓
@@ -81,14 +81,14 @@ curl -sL https://raw.githubusercontent.com/Hostingglobal-Tech/claude-code-os/mai
 
 스크립트가:
 1. Ventoy USB 자동 검색 (label = `Ventoy`)
-2. Latest ISO + persistence.dat + ventoy.json 자동 다운로드 + 박음
-3. 부팅하면 3초 후 자동 — Wi-Fi/OAuth/한글룰 USB 에 자동 저장
+2. Latest ISO + persistence.dat + ventoy.json 자동 다운로드 + 설치
+3. 부팅하면 3초 후 자동 — Wi-Fi/OAuth/설정 USB 에 자동 저장
 
-**먼저 USB 에 [Ventoy](https://www.ventoy.net) 박혀있어야**.
+**먼저 USB 에 [Ventoy](https://www.ventoy.net) 포함되어 있어야**.
 
 ### 수동 다운로드
 
-[Releases](https://github.com/Hostingglobal-Tech/claude-code-os/releases) 에서 4 파일 받음 → USB 의 root + `ventoy/` 에 박음. 상세는 [INSTALL.md](INSTALL.md).
+[Releases](https://github.com/Hostingglobal-Tech/claude-code-os/releases) 에서 4 파일 받음 → USB 의 root + `ventoy/` 에 설치. 상세는 [INSTALL.md](INSTALL.md).
 
 ### 직접 빌드
 
