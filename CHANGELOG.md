@@ -102,17 +102,17 @@
 
 ---
 
-## 비교 (v1.0.0 → v1.0.34)
+## 비교 (v1.0.0 → v1.0.35)
 
-| 항목 | v1.0.0 | v1.0.34 |
+| 항목 | v1.0.0 | v1.0.35 |
 |---|---|---|
-| 인터페이스 | 검은 콘솔 | X11 데스크톱 |
+| 인터페이스 | 검은 콘솔 | X11 데스크톱 (fluxbox + xfce4-terminal) |
 | 사용자 | root | cco (sudo NOPASSWD) |
 | 한글 입력 | 불가 | ibus-hangul + D2Coding |
 | Wi-Fi | 없음 | iwgtk + iwd (RTL8821CE 등) |
 | OAuth | 다른 PC | Firefox 자동 |
 | **Persistence** | 없음 | **Ventoy 자동 (cco-persistence.dat)** |
 | 부팅 시간 | ~30s | ~30s + 3s Ventoy timeout |
-| 풀기 | tar.gz 1-2분 | tar 직접 1-2분 (squashfs+overlay 검증 중) |
+| 압축 해제 | tar.gz | **squashfs 직접 mount + overlayfs (해제 0)** |
 | 자동 설치 | 없음 | **`install-cco-on-ventoy.ps1/.sh` 한 줄** |
-| ISO 크기 | ~400MB | ~930MB (squashfs) / 1.83GB (tar) |
+| ISO 크기 | ~400MB | ~930MB (squashfs zstd) |

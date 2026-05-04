@@ -75,15 +75,16 @@
 
 ---
 
-## Comparison (v1.0.0 → v1.0.34)
+## Comparison (v1.0.0 → v1.0.35)
 
-| Item | v1.0.0 | v1.0.34 |
+| Item | v1.0.0 | v1.0.35 |
 |---|---|---|
-| Interface | Black console | X11 desktop |
+| Interface | Black console | X11 desktop (fluxbox + xfce4-terminal) |
 | User | root | cco (sudo NOPASSWD) |
 | Korean input | none | ibus-hangul + D2Coding |
 | Wi-Fi | none | iwgtk + iwd (RTL8821CE etc.) |
 | OAuth | Separate PC | Firefox automatic |
 | **Persistence** | none | **Ventoy auto (cco-persistence.dat)** |
+| Decompression | tar.gz | **squashfs direct-mount + overlayfs** |
 | Auto installer | none | **`install-cco-on-ventoy.{ps1,sh}` one-liner** |
-| ISO size | ~400 MB | ~930 MB (squashfs) |
+| ISO size | ~400 MB | ~930 MB (squashfs zstd) |
