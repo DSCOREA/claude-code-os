@@ -67,9 +67,28 @@ Claude Code 화면이 뜨고, OAuth 코드 입력하면 끝.
 
 디스플레이 서버 없음. 윈도우 매니저 없음. 파일 매니저 없음. OS 가 곧 한 프로그램입니다.
 
-### 다운로드
+### 자동 설치 (한 줄, 추천)
 
-[Releases](https://github.com/Hostingglobal-Tech/claude-code-os/releases) 에서 `cco-alpine-vX.Y.Z.iso` 받기.
+**Windows** (PowerShell, admin):
+```powershell
+iwr -useb https://raw.githubusercontent.com/Hostingglobal-Tech/claude-code-os/main/install-cco-on-ventoy.ps1 | iex
+```
+
+**Linux / macOS**:
+```bash
+curl -sL https://raw.githubusercontent.com/Hostingglobal-Tech/claude-code-os/main/install-cco-on-ventoy.sh | bash
+```
+
+스크립트가:
+1. Ventoy USB 자동 검색 (label = `Ventoy`)
+2. Latest ISO + persistence.dat + ventoy.json 자동 다운로드 + 박음
+3. 부팅하면 3초 후 자동 — Wi-Fi/OAuth/한글룰 USB 에 자동 저장
+
+**먼저 USB 에 [Ventoy](https://www.ventoy.net) 박혀있어야**.
+
+### 수동 다운로드
+
+[Releases](https://github.com/Hostingglobal-Tech/claude-code-os/releases) 에서 4 파일 받음 → USB 의 root + `ventoy/` 에 박음. 상세는 [INSTALL.md](INSTALL.md).
 
 ### 직접 빌드
 
