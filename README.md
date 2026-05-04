@@ -114,19 +114,11 @@ sudo ./build-iso.sh 1.0.34   # initramfs patch + boot menu + ISO → cco-alpine-
 - 약 30~60초 후 데스크톱 + claude 프롬프트
 ```
 
-**물리 PC 에 USB 로 굽기** (persistence 사용 — 권장)
+**물리 PC 에 USB 로 굽기**
 
-[Ventoy](https://www.ventoy.net) 으로 USB 박음 → 위의 [자동 설치](#자동-설치-한-줄-추천) 한 줄 명령. Wi-Fi/OAuth/사용자 설정 자동 보존.
-
-**일회용 LiveCD 만 (persistence 없음)**
-
-Rufus / balenaEtcher / `dd` 의 DD 모드는 ISO 를 USB 에 통째로 박아 read-only 가 됨 — **Ventoy/persistence 사용 불가**. 일회용으로만:
-
-```bash
-# Linux/macOS
-sudo dd if=cco-alpine-vX.Y.Z.iso of=/dev/sdX bs=4M status=progress oflag=sync
-```
-Windows: Rufus 또는 balenaEtcher 의 DD 모드.
+1. [Ventoy](https://www.ventoy.net) 으로 USB 설치 (Ventoy2Disk.exe 실행 → USB 선택 → Install)
+2. 위의 [자동 설치](#자동-설치-한-줄-추천) 한 줄 명령 실행
+3. USB 부팅 → 3초 후 자동 → Wi-Fi/OAuth/설정 자동 보존
 
 ### 기본 로그인 (latest)
 
@@ -231,19 +223,11 @@ sudo ./build-iso.sh 1.0.34    # → cco-alpine-v1.0.34.iso
 - Boot order: CD/DVD first
 - ~30–60s after power-on, you'll see the desktop + claude prompt.
 
-**USB on bare metal** (persistence — recommended)
+**USB on bare metal**
 
-Install [Ventoy](https://www.ventoy.net) on your USB, then run the [one-line auto installer](#download). Wi-Fi/OAuth/user settings are preserved across reboots.
-
-**LiveCD only (no persistence)**
-
-Rufus / balenaEtcher / `dd` writes the ISO as a raw image — the USB becomes read-only and **Ventoy/persistence is not possible**. For single-session use only:
-
-```bash
-# Linux/macOS
-sudo dd if=cco-alpine-vX.Y.Z.iso of=/dev/sdX bs=4M status=progress oflag=sync
-```
-Windows: Rufus or balenaEtcher in DD mode.
+1. Install [Ventoy](https://www.ventoy.net) on the USB (run Ventoy2Disk.exe → pick the USB → Install).
+2. Run the [one-line auto installer](#download) above.
+3. Boot — 3 s timeout → Wi-Fi/OAuth/settings preserved across reboots.
 
 ### Default credentials (latest)
 
