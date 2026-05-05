@@ -4,7 +4,7 @@
 # Usage:
 #   ./install-cco-on-ventoy.sh                 # 자동 USB 검색
 #   ./install-cco-on-ventoy.sh /mnt/usb        # mount point 명시
-#   ./install-cco-on-ventoy.sh /mnt/usb v1.0.35
+#   ./install-cco-on-ventoy.sh /mnt/usb v1.0.34
 set -e
 
 USB_PATH="${1:-}"

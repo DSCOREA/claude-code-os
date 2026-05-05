@@ -9,7 +9,7 @@
 #   - xorriso, cpio, gzip
 set -e
 
-VERSION="${1:-1.0.35}"
+VERSION="${1:-1.0.34}"
 [ "$EUID" = 0 ] || { echo "Run with sudo." >&2; exit 1; }
 [ -f cco-root.squashfs ] || { echo "cco-root.squashfs missing. Run build-rootfs.sh first." >&2; exit 1; }
 [ -f alpine-standard-3.20.3-x86_64.iso ] || { echo "alpine-standard-3.20.3-x86_64.iso missing." >&2; exit 1; }

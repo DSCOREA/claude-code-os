@@ -6,7 +6,7 @@ USB 한 개 꽂고 부팅하면 — `cco` 사용자 자동 로그인 → fluxbox
 
 ![Claude Code OS hero](demo/cco-hero.png)
 
-> Hero image — Claude Code OS v1.0.35. AI-native LiveCD: USB boot → Korean input → AI in ~30 seconds.
+> Hero image — Claude Code OS v1.0.34. AI-native LiveCD: USB boot → Korean input → AI in ~30 seconds.
 
 > 📋 [Full changelog](CHANGELOG.md) · [Install guide](INSTALL.md)
 
@@ -104,7 +104,7 @@ wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-miniroot
 
 # 2. 빌드 (sudo)
 sudo ./build-rootfs.sh   # apk + npm + chroot + Wi-Fi/persistence 셋업 → cco-root.squashfs (~760MB, zstd)
-sudo ./build-iso.sh 1.0.35   # initramfs patch + boot menu + ISO → cco-alpine-v1.0.35.iso (~930MB)
+sudo ./build-iso.sh 1.0.34   # initramfs patch + boot menu + ISO → cco-alpine-v1.0.34.iso (~930MB)
 ```
 
 ### 실행
@@ -216,7 +216,7 @@ sudo apt-get install squashfs-tools xorriso cpio
 wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-standard-3.20.3-x86_64.iso
 wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/x86_64/alpine-minirootfs-3.20.3-x86_64.tar.gz
 sudo ./build-rootfs.sh        # → cco-root.squashfs
-sudo ./build-iso.sh 1.0.35    # → cco-alpine-v1.0.35.iso
+sudo ./build-iso.sh 1.0.34    # → cco-alpine-v1.0.34.iso
 ```
 
 ### Run
