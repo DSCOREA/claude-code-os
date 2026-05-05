@@ -34,6 +34,8 @@ chroot "$ROOT" /bin/sh -e <<'CHROOT'
 apk update
 apk add --no-cache \
   linux-lts \
+  linux-firmware-i915 linux-firmware-amdgpu linux-firmware-other \
+  mesa-dri-gallium mesa-gles \
   openrc \
   nodejs npm \
   xorg-server xf86-video-vmware xf86-video-vesa xf86-video-fbdev \
