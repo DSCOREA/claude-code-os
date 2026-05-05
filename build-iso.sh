@@ -19,7 +19,7 @@ rm -rf alpine-extract initrd-extract
 mkdir -p alpine-extract initrd-extract
 xorriso -osirrox on -indev alpine-standard-3.20.3-x86_64.iso \
   -extract /boot alpine-extract/boot \
-  -extract /efi alpine-extract/efi 2>/dev/null || true
+  -extract /efi alpine-extract/efi 2>/dev/null && xorriso -osirrox on -indev alpine-standard-3.20.3-x86_64.iso -extract /boot/modloop-lts alpine-extract/boot/modloop-lts 2>/dev/null || true
 
 cd initrd-extract
 gunzip -c ../alpine-extract/boot/initramfs-lts | cpio -idm 2>/dev/null
@@ -75,7 +75,15 @@ mount -t tmpfs shm $sysroot/dev/shm 2>/dev/null\
 mount -t proc proc $sysroot/proc 2>/dev/null\
 mount -t sysfs sys $sysroot/sys 2>/dev/null\
 mount -t tmpfs run $sysroot/run 2>/dev/null\
-mount -t tmpfs tmp $sysroot/tmp 2>/dev/null' "$INIT"
+mount -t tmpfs tmp $sysroot/tmp 2>/dev/null\
+mkdir -p $sysroot/.modloop\
+SQDIR=$(dirname "$SQ")\
+ML=""\
+[ -f "$SQDIR/boot/modloop-lts" ] && ML="$SQDIR/boot/modloop-lts"\
+[ -z "$ML" ] && for D in /media/cdrom /run/medium /cdrom /run/initramfs/medium /media/sr0 /media/sda1 /media/sdb1 /cco-media; do [ -f "$D/boot/modloop-lts" ] && ML="$D/boot/modloop-lts" && break; done\
+[ -z "$ML" ] && ML=$(find / -maxdepth 6 -name modloop-lts 2>/dev/null | head -1)\
+[ -n "$ML" ] && mount -t squashfs -o loop,ro "$ML" $sysroot/.modloop 2>/dev/null && echo "  modloop: $ML"\
+[ ! -e $sysroot/lib/modules ] && [ -d $sysroot/.modloop/modules ] && ln -sf /.modloop/modules $sysroot/lib/modules' "$INIT"
 
 # 5. Repack initramfs
 ( cd initrd-extract && find . | cpio -o -H newc 2>/dev/null | gzip > "$PWD/../alpine-extract/boot/initramfs-lts" )
@@ -91,6 +99,7 @@ xorriso -indev alpine-standard-3.20.3-x86_64.iso -outdev "$ISO_OUT" \
   -map alpine-extract/boot/initramfs-lts /boot/initramfs-lts \
   -map alpine-extract/boot/syslinux /boot/syslinux \
   -map alpine-extract/boot/grub /boot/grub \
+  -map alpine-extract/boot/modloop-lts /boot/modloop-lts \
   -map alpine-extract/efi /efi \
   -map alpine-extract/cco-root.squashfs /cco-root.squashfs \
   -commit 2>&1 | tail -3
