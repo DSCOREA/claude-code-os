@@ -75,9 +75,9 @@
 
 ---
 
-## Comparison (v1.0.0 → v1.0.34)
+## Comparison (v1.0.0 → v1.0.35)
 
-| Item | v1.0.0 | v1.0.34 |
+| Item | v1.0.0 | v1.0.35 |
 |---|---|---|
 | Interface | Black console | X11 desktop (fluxbox + xfce4-terminal) |
 | User | root | cco (sudo NOPASSWD) |
