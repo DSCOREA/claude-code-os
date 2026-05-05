@@ -220,8 +220,33 @@ setcap 'cap_sys_rawio,cap_dac_override,cap_sys_admin+ep' /usr/bin/Xorg 2>/dev/nu
 EOI
 chmod +x "$ROOT/etc/local.d/cco-infra.start"
 
-# 7. /usr/local/bin/{cco-banner, claude-cco, cco-startup, cco-persistence} — see GitHub repo for full content
-# (omitted from public build script — see runtime ISO for current versions)
+# 7. /usr/local/bin/cco-startup — banner + claude with auto-OAuth-URL → Firefox
+mkdir -p "$ROOT/usr/local/bin"
+cat > "$ROOT/usr/local/bin/cco-startup" <<'EOSTART'
+#!/bin/sh
+clear
+printf '\033[1;38;5;51m\n  Claude Code OS v1.0.35\n  user: cco (sudo NOPASSWD)\n  F2 Firefox  F3 Term  F4 Claude  F11 Fullscreen\n\033[0m\n\n'
+[ -z "$BROWSER" ] && export BROWSER='firefox'
+LOG=/tmp/claude-$$.log
+SEEN=/tmp/cco-oauth-seen.$$
+: > "$LOG"; : > "$SEEN"
+( tail -n 0 -F "$LOG" 2>/dev/null | while IFS= read -r LINE; do
+    URL=$(printf '%s' "$LINE" | grep -oE 'https://[A-Za-z0-9./?=#&_:%+~-]+' | head -1)
+    if [ -n "$URL" ] && ! grep -qF "$URL" "$SEEN" 2>/dev/null; then
+      echo "$URL" >> "$SEEN"
+      firefox --new-tab "$URL" >/dev/null 2>&1 &
+    fi
+  done ) &
+WATCHER=$!
+SHELL=/bin/sh script -q -f -c "claude --dangerously-skip-permissions $*" "$LOG"
+kill $WATCHER 2>/dev/null
+rm -f "$LOG" "$SEEN"
+echo
+echo '--- claude session ended ---'
+read -p 'Press Enter to restart...' _
+exec /usr/local/bin/cco-startup
+EOSTART
+chmod 755 "$ROOT/usr/local/bin/cco-startup"
 
 # 8. cco home — autostart X
 mkdir -p "$ROOT/home/cco/.fluxbox" "$ROOT/home/cco/.config/xfce4/terminal"
