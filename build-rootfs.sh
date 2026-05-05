@@ -33,6 +33,7 @@ EOF
 chroot "$ROOT" /bin/sh -e <<'CHROOT'
 apk update
 apk add --no-cache \
+  openrc \
   nodejs npm \
   xorg-server xf86-video-vmware xf86-video-vesa xf86-video-fbdev \
   xf86-input-vmmouse xf86-input-libinput \
@@ -42,13 +43,14 @@ apk add --no-cache \
   ibus ibus-hangul ibus-gtk3 libhangul \
   font-noto-cjk font-noto-cjk-extra \
   open-vm-tools open-vm-tools-gtk open-vm-tools-guestinfo \
-  eudev shadow sudo util-linux util-linux-misc libcap-utils \
+  eudev eudev-openrc shadow sudo util-linux util-linux-misc util-linux-openrc libcap-utils \
   musl-locales coreutils wget unzip \
   linux-firmware-rtw88 linux-firmware-rtl_nic linux-firmware-rtl_bt \
-  wpa_supplicant iw wireless-tools \
-  networkmanager networkmanager-wifi networkmanager-tui \
-  network-manager-applet iwd iwgtk \
-  chrony
+  wpa_supplicant wpa_supplicant-openrc iw wireless-tools \
+  networkmanager networkmanager-wifi networkmanager-tui networkmanager-openrc \
+  network-manager-applet iwd iwd-openrc iwgtk \
+  dbus dbus-openrc \
+  chrony chrony-openrc
 
 # claude code
 npm install -g @anthropic-ai/claude-code
@@ -87,6 +89,8 @@ rc-update add chronyd default 2>/dev/null || true
 rc-update add local default 2>/dev/null || true
 rc-update add devfs sysinit 2>/dev/null || true
 rc-update add dmesg sysinit 2>/dev/null || true
+rc-update add udev sysinit 2>/dev/null || true
+rc-update add udev-trigger sysinit 2>/dev/null || true
 rc-update add hwclock boot 2>/dev/null || true
 rc-update add bootmisc boot 2>/dev/null || true
 rc-update add hostname boot 2>/dev/null || true
