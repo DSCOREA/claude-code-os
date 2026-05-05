@@ -33,6 +33,7 @@ EOF
 chroot "$ROOT" /bin/sh -e <<'CHROOT'
 apk update
 apk add --no-cache \
+  linux-lts \
   openrc \
   nodejs npm \
   xorg-server xf86-video-vmware xf86-video-vesa xf86-video-fbdev \
